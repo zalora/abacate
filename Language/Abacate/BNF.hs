@@ -87,10 +87,7 @@ scenario
     pComment <- comment
     pTags <- tags
     scenarioKeyword
-    gSpaces
-    name <- linesToKeyword
-    white
-    pSteps <- steps
+    (name, pSteps) <- scenarioCommon
     return $ Scenario pTags $ BasicScenario pComment name pSteps
 
 scenarioOutline :: GenParser st ScenarioOutline
@@ -99,10 +96,7 @@ scenarioOutline
     pComment <- comment
     pTags <- tags
     scenarioOutlineKeyword
-    gSpaces
-    name <- linesToKeyword
-    white
-    pSteps <- steps
+    (name, pSteps) <- scenarioCommon
     pExamplesSection <- examplesSection
     white
     return
@@ -115,10 +109,7 @@ background
   = do
     pComment <- comment
     backgroundKeyword
-    gSpaces
-    name <- linesToKeyword
-    white
-    pSteps <- steps
+    (name, pSteps) <- scenarioCommon
     return $ BasicScenario pComment name pSteps
 
 tags :: GenParser st Tags
@@ -195,7 +186,7 @@ cell
   = do
     pCell <- many1 (noneOf "\r\n|")
     void (char '|')
-    return $ strip $ pack $ pCell
+    return $ strip $ pack pCell
 
 row :: GenParser st Row
 row
@@ -231,9 +222,9 @@ linesToKeyword :: GenParser st Text
 linesToKeyword
   = strip
     <$> pack
-    <$> (manyTill anyChar
-      $ lookAhead
-      $ try $ eol >> gSpaces >> reservedWordsAndSymbols)
+    <$> manyTill
+      anyChar
+      (lookAhead $ try $ eol >> gSpaces >> reservedWordsAndSymbols)
 
 reservedWordsAndSymbols :: GenParser st ()
 reservedWordsAndSymbols
@@ -256,10 +247,6 @@ eol = optional (char '\r') >> void (char '\n')
 white :: GenParser st ()
 white = skipMany oneWhite
 
--- In the BNF but not here because they're not needed
-
--- Are in BNF in a different way
-
 -- Should be in BNF
 
 lineToEol :: GenParser st Text
@@ -278,3 +265,12 @@ white1 = skipMany1 oneWhite
 
 gSpaces :: GenParser st ()
 gSpaces = skipMany gSpace
+
+scenarioCommon :: GenParser st (Text, Steps)
+scenarioCommon
+  = do
+    gSpaces
+    name <- linesToKeyword
+    white
+    pSteps <- steps
+    return (name, pSteps)
