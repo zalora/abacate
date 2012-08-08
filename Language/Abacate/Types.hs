@@ -36,10 +36,6 @@ data FeatureElement
   = FES Scenario | FESO ScenarioOutline
     deriving (Eq, Show)
 
-data BasicScenario
-  = BasicScenario {bsComment :: Comment, bsName :: Text, bsSteps :: Steps}
-    deriving (Eq, Show)
-
 data Scenario
   = Scenario {scTags :: Tags, scBasicScenario :: BasicScenario}
     deriving (Eq, Show)
@@ -50,6 +46,11 @@ data ScenarioOutline
     deriving (Eq, Show)
 
 type Background = BasicScenario
+
+data BasicScenario
+  = BasicScenario {bsComment :: Comment, bsName :: Text, bsSteps :: Steps}
+    deriving (Eq, Show)
+
 type Tags = [Tag]
 type Tag = Text
 type Comment = Text
