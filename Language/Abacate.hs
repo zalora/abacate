@@ -14,7 +14,7 @@
 
 module
   Language.Abacate
-  (module Language.Abacate.BNF, parseFile,  parseAbacate)
+  (module Language.Abacate.Types, parseFile,  parseAbacate)
   where
 
 -- base
@@ -29,6 +29,7 @@ import Data.Text.IO
 import Text.Parsec
 
 -- abacate
+import Language.Abacate.Types
 import Language.Abacate.BNF
 
 parseFile :: FilePath -> IO (Either ParseError Abacate)
