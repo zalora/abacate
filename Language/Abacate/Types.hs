@@ -78,4 +78,3 @@ type Cell = Text
 
 data StepKeyword
   = Given | When | Then | And | But deriving (Eq, Bounded, Enum, Show, Read)
-
