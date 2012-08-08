@@ -11,7 +11,7 @@ homepage: http://github.com/marcotmarcot/abacate
 bug-reports: http://github.com/marcotmarcot/abacate/issues
 synopsis: Parser for a language similar to Cucumber's Gherkin
 description:
-  Gherkin is the language used by the Cucumber system for Behaviour Drive
+  Gherkin is the language used by the Cucumber system for Behaviour Driven
   Development.  This package contains a parser to it, based on its BNF with
   minor changes.
 category: Language
