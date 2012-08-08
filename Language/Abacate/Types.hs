@@ -21,12 +21,12 @@ type Abacate = Feature
 
 data Feature
   = Feature
-      {gBegComment :: Comment,
-        gTags :: Tags,
-        gHeader :: Header,
-        gBackground :: Maybe Background,
-        gFeatureElements :: FeatureElements,
-        gEndComment :: Comment}
+      {fBegComment :: Comment,
+        fTags :: Tags,
+        fHeader :: Header,
+        fBackground :: Maybe Background,
+        fFeatureElements :: FeatureElements,
+        fEndComment :: Comment}
     deriving (Eq, Show)
 
 type Header = Text
