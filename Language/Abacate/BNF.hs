@@ -46,10 +46,10 @@ import Text.Parsec.Text
 -- abacate
 import Language.Abacate.Types
 
-abacate :: GenParser st Abacate
+abacate :: Parser Abacate
 abacate = feature
 
-feature :: GenParser st Feature
+feature :: Parser Feature
 feature
   = do
     white
@@ -68,7 +68,7 @@ feature
         pFeatureElements
         pEndComment
 
-header :: GenParser st Header
+header :: Parser Header
 header
   = strip
     <$> pack
@@ -77,11 +77,11 @@ header
          $ choice
          $ map try [void scenarioOutline, void scenario, void background])
 
-featureElements :: GenParser st FeatureElements
+featureElements :: Parser FeatureElements
 featureElements
   = many $ (FES <$> try scenario) <|> (FESO <$> try scenarioOutline)
 
-scenario :: GenParser st Scenario
+scenario :: Parser Scenario
 scenario
   = do
     pComment <- comment
@@ -90,7 +90,7 @@ scenario
     (name, pSteps) <- scenarioCommon
     return $ Scenario pTags $ BasicScenario pComment name pSteps
 
-scenarioOutline :: GenParser st ScenarioOutline
+scenarioOutline :: Parser ScenarioOutline
 scenarioOutline
   = do
     pComment <- comment
@@ -104,7 +104,7 @@ scenarioOutline
       $ Scenario pTags
       $ BasicScenario pComment name pSteps
 
-background :: GenParser st Background
+background :: Parser Background
 background
   = do
     pComment <- comment
@@ -112,7 +112,7 @@ background
     (name, pSteps) <- scenarioCommon
     return $ BasicScenario pComment name pSteps
 
-tags :: GenParser st Tags
+tags :: Parser Tags
 tags
   = white
     >> many
@@ -121,10 +121,10 @@ tags
         white1
         return pTag)
 
-tag :: GenParser st Tag
+tag :: Parser Tag
 tag = char '@' >> pack <$> many1 (noneOf "@\r\n\t ")
 
-comment :: GenParser st Comment
+comment :: Parser Comment
 comment
   = unlines
     <$> many
@@ -133,13 +133,13 @@ comment
         white
         return pComment)
 
-commentLine :: GenParser st Comment
+commentLine :: Parser Comment
 commentLine = gSpaces >> char '#' >> lineToEol
 
-steps :: GenParser st Steps
+steps :: Parser Steps
 steps = many $ try step
 
-step :: GenParser st Step
+step :: Parser Step
 step
  = do
    pComment <- comment
@@ -152,10 +152,10 @@ step
    white
    return $ Step pComment keyword body pMultilineArg
 
-examplesSection :: GenParser st ExamplesSection
+examplesSection :: Parser ExamplesSection
 examplesSection = many $ try examples
 
-examples :: GenParser st Examples
+examples :: Parser Examples
 examples
   = do
     pComment <- comment
@@ -168,27 +168,27 @@ examples
     white
     return $ Examples pComment name pTable
 
-multilineArg :: GenParser st MultilineArg
+multilineArg :: Parser MultilineArg
 multilineArg = MAT <$> try table <|> MAPS <$> try pyString
 
-pyString :: GenParser st PyString
+pyString :: Parser PyString
 pyString
   = openPyString >> strip <$> pack <$> manyTill anyChar (try closePyString)
 
-openPyString :: GenParser st ()
+openPyString :: Parser ()
 openPyString = gSpaces >> string "\"\"\"" >> gSpaces >> eol
 
-closePyString :: GenParser st ()
+closePyString :: Parser ()
 closePyString = eol >> gSpaces >> string "\"\"\"" >> white
 
-cell :: GenParser st Cell
+cell :: Parser Cell
 cell
   = do
     pCell <- many1 (noneOf "\r\n|")
     void (char '|')
     return $ strip $ pack pCell
 
-row :: GenParser st Row
+row :: Parser Row
 row
   = do
     white
@@ -197,28 +197,28 @@ row
     eol
     return pRow
 
-table :: GenParser st Table
+table :: Parser Table
 table = many1 $ try row
 
-stepKeyword :: GenParser st StepKeyword
+stepKeyword :: Parser StepKeyword
 stepKeyword
   = read
     <$> choice
       (map (try . string . show) ([minBound .. maxBound] :: [StepKeyword]))
 
-examplesKeyword :: GenParser st ()
+examplesKeyword :: Parser ()
 examplesKeyword = void $ string "Examples:"
 
-scenarioOutlineKeyword :: GenParser st ()
+scenarioOutlineKeyword :: Parser ()
 scenarioOutlineKeyword = void $ string "Scenario Outline:"
 
-scenarioKeyword :: GenParser st ()
+scenarioKeyword :: Parser ()
 scenarioKeyword = void $ string "Scenario:"
 
-backgroundKeyword :: GenParser st ()
+backgroundKeyword :: Parser ()
 backgroundKeyword = void $ string "Background:"
 
-linesToKeyword :: GenParser st Text
+linesToKeyword :: Parser Text
 linesToKeyword
   = strip
     <$> pack
@@ -226,7 +226,7 @@ linesToKeyword
       anyChar
       (lookAhead $ try $ eol >> gSpaces >> reservedWordsAndSymbols)
 
-reservedWordsAndSymbols :: GenParser st ()
+reservedWordsAndSymbols :: Parser ()
 reservedWordsAndSymbols
   = choice
     $ map
@@ -238,35 +238,35 @@ reservedWordsAndSymbols
         void tag,
         void commentLine]
 
-gSpace :: GenParser st ()
+gSpace :: Parser ()
 gSpace = void $ oneOf " \t"
 
-eol :: GenParser st ()
+eol :: Parser ()
 eol = optional (char '\r') >> void (char '\n')
 
-white :: GenParser st ()
+white :: Parser ()
 white = skipMany oneWhite
 
 -- Should be in BNF
 
-lineToEol :: GenParser st Text
+lineToEol :: Parser Text
 lineToEol = pack <$> many (noneOf "\r\n")
 
-keywordSpace :: GenParser st ()
+keywordSpace :: Parser ()
 keywordSpace = void $ char ' '
 
 -- Not defined in BNF
 
-oneWhite :: GenParser st ()
+oneWhite :: Parser ()
 oneWhite = gSpace <|> eol
 
-white1 :: GenParser st ()
+white1 :: Parser ()
 white1 = skipMany1 oneWhite
 
-gSpaces :: GenParser st ()
+gSpaces :: Parser ()
 gSpaces = skipMany gSpace
 
-scenarioCommon :: GenParser st (Text, Steps)
+scenarioCommon :: Parser (Text, Steps)
 scenarioCommon
   = do
     gSpaces
