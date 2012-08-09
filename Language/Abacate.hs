@@ -1,17 +1,11 @@
--- Copyright 2012 Marco Túlio Pimenta Gontijo <marcotmarcot@gmail.com>
+-- |
+-- Module      :  Language.Abacate
+-- Copyright   :  (c) Marco Túlio Pimenta Gontijo <marcotmarcot@gmail.com> 2012
+-- License     :  Apache 2.0 (see the file LICENSE)
 --
--- Licensed under the Apache License, Version 2.0 (the "License");
--- you may not use this file except in compliance with the License.
--- You may obtain a copy of the License at
---
---     http://www.apache.org/licenses/LICENSE-2.0
---
--- Unless required by applicable law or agreed to in writing, software
--- distributed under the License is distributed on an "AS IS" BASIS,
--- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
--- See the License for the specific language governing permissions and
--- limitations under the License.
-
+-- Maintainer  :  Marco Túlio Pimenta Gontijo <marcotmarcot@gmail.com>
+-- Stability   :  provisional
+-- Portability :  portable
 module
   Language.Abacate
   (module Language.Abacate.Types, parseFile,  parseAbacate)
@@ -32,9 +26,11 @@ import Text.Parsec
 import Language.Abacate.Types
 import Language.Abacate.BNF
 
+-- | Parses a file with 'Abacate' code.
 parseFile :: FilePath -> IO (Either ParseError Abacate)
 parseFile path = parseAbacateWithSource path <$> readFile path
 
+-- | Parses a string with 'Abacate' code.
 parseAbacate :: Text -> Either ParseError Abacate
 parseAbacate = parseAbacateWithSource "parseAbacate"
 
