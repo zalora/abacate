@@ -8,19 +8,7 @@
 -- Portability :  portable
 --
 -- According to
--- <https://github.com/cucumber/gherkin/wiki/BNF/cd25abae017ac768e1d39f80aabf733642515889>
--- with the following considerations:
---
---   * There's no need of 'white' after 'tags', 'comment' or 'steps'
---
---   * 'lineToEol' and 'keywordSpace' are not implemented on the original BNF.
---
---   * There are two versions of 'step'.  This module uses the first, which
---     seems to be more complete.
---
---   * 'cell' is defined as @[^\r\n|]+ \'|\'@ instead of @[^\r\n|] \'|\'@
---
---   * 'row' should start with white
+-- <https://github.com/cucumber/gherkin/wiki/BNF/cf8696092b0e6841ba0c3cf4e2f0d3c964b9c144>.
 module
   Language.Abacate.BNF
   (module Language.Abacate.Types, abacate)
