@@ -1,5 +1,5 @@
 -- |
--- Module      :  Language.Abacate
+-- Module      :  Language.Abacate.Types
 -- Copyright   :  (c) Marco Túlio Pimenta Gontijo <marcotmarcot@gmail.com> 2012
 -- License     :  Apache 2.0 (see the file LICENSE)
 --
