@@ -8,7 +8,7 @@
 -- Portability :  portable
 module
   Language.Abacate.BNF
-  (module Language.Abacate.Types, abacate)
+  (abacate, module Language.Abacate.Types, Parser)
   where
 
 -- base
