@@ -6,6 +6,9 @@
 -- Maintainer  :  Marco Túlio Pimenta Gontijo <marcotmarcot@gmail.com>
 -- Stability   :  unstable
 -- Portability :  portable
+--
+-- According to
+-- <https://github.com/cucumber/gherkin/wiki/BNF/cf8696092b0e6841ba0c3cf4e2f0d3c964b9c144>.
 module
   Language.Abacate
   (module Language.Abacate.Types, parseFile,  parseAbacate)
