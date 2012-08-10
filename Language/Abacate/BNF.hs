@@ -227,8 +227,6 @@ eol = optional (char '\r') >> void (char '\n')
 white :: Parser ()
 white = skipMany oneWhite
 
--- Should be in BNF
-
 lineToEol :: Parser Text
 lineToEol = pack <$> many (noneOf "\r\n")
 
