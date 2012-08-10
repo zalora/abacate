@@ -6,10 +6,7 @@
 -- Maintainer  :  Marco Túlio Pimenta Gontijo <marcotmarcot@gmail.com>
 -- Stability   :  unstable
 -- Portability :  portable
-module
-  Language.Abacate.BNF
-  (abacate, module Language.Abacate.Types, Parser)
-  where
+module Language.Abacate.BNF (abacate) where
 
 -- base
 import Prelude hiding (unlines)

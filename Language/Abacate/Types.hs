@@ -6,32 +6,7 @@
 -- Maintainer  :  Marco Túlio Pimenta Gontijo <marcotmarcot@gmail.com>
 -- Stability   :  unstable
 -- Portability :  portable
-module
-  Language.Abacate.Types
-  (Abacate,
-    Feature (..),
-    Header,
-    FeatureElements,
-    FeatureElement (..),
-    Scenario (..),
-    ScenarioOutline (..),
-    Background,
-    BasicScenario (..),
-    Tags,
-    Tag,
-    Comment,
-    Steps,
-    Step (..),
-    ExamplesSection,
-    Examples (..),
-    MultilineArg (..),
-    PyString,
-    Table,
-    Row,
-    Cell,
-    StepKeyword (..),
-    Text)
-  where
+module Language.Abacate.Types where
 
 -- text
 import Data.Text
