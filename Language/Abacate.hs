@@ -7,6 +7,10 @@
 -- Stability   :  unstable
 -- Portability :  portable
 --
+-- Gherkin is the language used by the Cucumber system for Behaviour Driven
+-- Development.  This package contains a parser to it, based on its BNF with
+-- minor changes.  For more information on Cucumber, check <http://cukes.info>.
+--
 -- According to
 -- <https://github.com/cucumber/gherkin/wiki/BNF/cf8696092b0e6841ba0c3cf4e2f0d3c964b9c144>.
 module

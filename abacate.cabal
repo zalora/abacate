@@ -13,7 +13,7 @@ synopsis: Parser for a language similar to Cucumber's Gherkin
 description:
   Gherkin is the language used by the Cucumber system for Behaviour Driven
   Development.  This package contains a parser to it, based on its BNF with
-  minor changes.
+  minor changes.  For more information on Cucumber, check <http://cukes.info>.
 category: Language
 tested-with: GHC ==7.4.2
 extra-source-files:
