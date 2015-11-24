@@ -20,7 +20,6 @@ module
 
 -- base
 import Prelude hiding (readFile)
-import Control.Applicative
 
 -- text
 import Data.Text

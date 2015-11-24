@@ -10,7 +10,6 @@ module Language.Abacate.BNF (abacate) where
 
 -- base
 import Prelude hiding (unlines)
-import Control.Applicative hiding (many, (<|>), optional)
 import Control.Monad
 
 -- text
