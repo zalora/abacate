@@ -15,7 +15,7 @@
 -- <https://github.com/cucumber/gherkin/wiki/BNF/cf8696092b0e6841ba0c3cf4e2f0d3c964b9c144>.
 module
   Language.Abacate
-  (module Language.Abacate.Types, parseFile,  parseAbacate)
+  (module Language.Abacate.Types, parseFile, parseFileBS, parseAbacate)
   where
 
 -- base
@@ -24,6 +24,10 @@ import Prelude hiding (readFile)
 -- text
 import Data.Text
 import Data.Text.IO
+import Data.Text.Encoding
+
+-- bytestring
+import qualified Data.ByteString as B
 
 -- parsec
 import Text.Parsec
@@ -35,6 +39,11 @@ import Language.Abacate.BNF
 -- | Parses a file with 'Abacate' code.
 parseFile :: FilePath -> IO (Either ParseError Abacate)
 parseFile path = parseAbacateWithSource path <$> readFile path
+
+-- | Parses a file with 'Abacate' code. Read file as ByteString.
+parseFileBS :: FilePath -> IO (Either ParseError Abacate)
+parseFileBS path =
+    parseAbacateWithSource path . decodeUtf8 <$> B.readFile path
 
 -- | Parses a string with 'Abacate' code.
 parseAbacate :: Text -> Either ParseError Abacate
