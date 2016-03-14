@@ -35,7 +35,8 @@ library
     base,
     text,
     parsec,
-    attoparsec
+    attoparsec,
+    bytestring
   ghc-options: -Wall
 
 Test-Suite abacate-test

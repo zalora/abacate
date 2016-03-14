@@ -11,9 +11,12 @@ module Language.Abacate.Getters where
 
 import Language.Abacate.Types
 
-import Data.Attoparsec.Text       
-import Data.Char            (isDigit)
-import Data.Text
+import Data.ByteString                  as B
+-- import Data.Attoparsec.ByteString
+import Data.Attoparsec.ByteString.Char8 -- (decimal, char, anyChar)
+import Data.Text.Encoding
+-- import Data.Char                        (isDigit)
+import Data.Text                        as T
 import Data.Maybe
 
 -- Extractors. More info about Abacate constructors, see:
@@ -24,7 +27,7 @@ doesBackgroundExist :: Abacate -> Bool
 doesBackgroundExist = isJust . fBackground
 
 backgroundSteps :: Abacate -> [Step]
-backgroundSteps abacate = 
+backgroundSteps abacate =
     if doesBackgroundExist abacate
         then bsSteps . fromJust . fBackground $ abacate
         else []
@@ -43,8 +46,8 @@ backgroundSingleStepBody = stBody . backgroundSingleStep
 
 -- Scenario sections.
 isScenario :: FeatureElement -> Bool
-isScenario (FES _)  = True 
-isScenario (FESO _) = False 
+isScenario (FES _)  = True
+isScenario (FESO _) = False
 
 isScenarioOutline :: FeatureElement -> Bool
 isScenarioOutline = not . isScenario
@@ -56,7 +59,7 @@ scenarios abacate =
 
 scenarioOutlines :: Abacate -> [ScenarioOutline]
 scenarioOutlines abacate =
-    let only = [el | el <- fFeatureElements abacate, isScenarioOutline el]    
+    let only = [el | el <- fFeatureElements abacate, isScenarioOutline el]
     in [scO | FESO scO <- only]
 
 -- Scenario.
@@ -104,26 +107,26 @@ multiLineArg :: Step -> MultilineArg
 multiLineArg = fromJust . stMultilineArg
 
 isTable :: MultilineArg -> Bool
-isTable (MAT _)  = True 
-isTable (MAPS _) = False 
+isTable (MAT _)  = True
+isTable (MAPS _) = False
 
 isDocString :: MultilineArg -> Bool
 isDocString = not . isTable
 
 getTable :: MultilineArg -> Table
-getTable arg = 
+getTable arg =
     let MAT table = arg in table
 
 getDocString :: MultilineArg -> PyString
-getDocString arg = 
+getDocString arg =
     let MAPS docStr = arg in docStr
 
 getTableFrom :: Step -> Table
-getTableFrom step = 
+getTableFrom step =
     let MAT table = multiLineArg step in table
 
 getDocStringFrom :: Step -> PyString
-getDocStringFrom step = 
+getDocStringFrom step =
     let MAPS docStr = multiLineArg step in docStr
 
 ---------------- Useful parsers ----------------
@@ -131,45 +134,45 @@ getDocStringFrom step =
 -- Extracts single quoted string from a raw step.
 getSingleQuotedStringFrom :: Text -> Text
 getSingleQuotedStringFrom rawStep =
-    case parseOnly manyQuotedStrings rawStep of
-        Left  _    -> pack ""
-        Right strs -> strs !! 0
+    case parseOnly manyQuotedStrings (encodeUtf8 rawStep) of
+        Left  _    -> T.pack ""
+        Right strs -> decodeUtf8 $ strs !! 0
 
 -- Extracts all quoted strings from a raw step.
 getQuotedStringsFrom :: Text -> [Text]
 getQuotedStringsFrom rawStep =
-    case parseOnly manyQuotedStrings rawStep of
+    case parseOnly manyQuotedStrings (encodeUtf8 rawStep) of
         Left  _    -> []
-        Right strs -> strs
+        Right strs -> [decodeUtf8 str | str <- strs]
 
 -- Extracts single integer from a raw step.
 getSingleIntegerFrom :: Text -> Maybe Integer
 getSingleIntegerFrom rawStep =
-    case parseOnly manyNumbers rawStep of
+    case parseOnly manyNumbers (encodeUtf8 rawStep) of
         Left  _       -> Nothing
         Right numbers -> Just (numbers !! 0)
 
 -- Extracts all integers from a raw step.
 getIntegersFrom :: Text -> [Integer]
 getIntegersFrom rawStep =
-    case parseOnly manyNumbers rawStep of
+    case parseOnly manyNumbers (encodeUtf8 rawStep) of
         Left  _       -> []
         Right numbers -> numbers
 
 -- Attoparsec-based parsers.
 manyNumbers :: Parser [Integer]
 manyNumbers = many1 singleNumber
-    where 
+    where
         singleNumber = do
             skipWhile (not . isDigit)
             d <- decimal
             skipWhile (not . isDigit)
             return d
 
-manyQuotedStrings :: Parser [Text]
+manyQuotedStrings :: Parser [ByteString]
 manyQuotedStrings = many1 singleQuotedString
-    where 
+    where
         singleQuotedString = do
             skipWhile (/= '"')
             str <- char '"' *> manyTill' anyChar (char '"')
-            return $ pack str
+            return . encodeUtf8 . T.pack $ str
